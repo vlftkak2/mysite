@@ -25,15 +25,11 @@
 						</tr>
 						<tr>
 							<td class="label">내용</td>
-							<td><textarea id="content" name="content">수정해야 할 글은 고대로 
-이렇게 textarea에 뿌려야 합니다.
-개행문자 변경도 하지마세요.
-하하하하하
-즐건 코딩 되세요~~~~</textarea></td>
+							<td><textarea id="content" name="content">내용을 입력하세요</textarea></td>
 						</tr>
 					</table>
 					<div class="bottom">
-						<a href="/mysite/board?a=view">취소</a> <input type="submit" value="수정">
+						<a href="/mysite/board?a=viewform">취소</a> <input type="submit" value="수정">
 					</div>
 				</form>
 			</div>
