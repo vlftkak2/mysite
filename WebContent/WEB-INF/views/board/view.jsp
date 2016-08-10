@@ -38,8 +38,19 @@
 				</table>
 
 				<div class="bottom">
-					<a href="/mysite/board?a=listform">글목록</a> <a
-						href="/mysite/board?a=modifyform&no=${BoardVo.no }">글수정</a>
+				
+				<td>
+				<c:choose>
+					<c:when test='${not empty authUser && authUser.no == BoardVo.userNo }'>
+
+					<a href="/mysite/board?a=modifyform&no=${BoardVo.no }">글수정</a>
+					<a href="/mysite/board?a=listform">글목록</a>
+					</c:when>
+					<c:otherwise>
+					<a href="/mysite/board?a=listform">글목록</a>
+					</c:otherwise>
+				</c:choose>
+				</td>
 				</div>
 			</div>
 		</div>

@@ -32,15 +32,16 @@ public class deleteAction implements Action {
 			return;
 		}
 		
-		Long no=authUser.getNo();
+		String no=request.getParameter("no");
 		
 		BoardVo vo=new BoardVo();
-		vo.setNo(no);
+		vo.setNo(Long.parseLong(no));
 		
 		BoardDao dao=new BoardDao();
+		
 		dao.delete(vo);
 		
-		WebUtil.redirect("/mysite/board?a=list", request, response);
+		WebUtil.redirect("/mysite/board?a=listform", request, response);
 		
 		
 		

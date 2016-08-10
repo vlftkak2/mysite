@@ -35,14 +35,9 @@ public class listFormAction implements Action {
 		List<BoardVo> list=dao.getList();
 		
 		request.setAttribute("list", list);
+		request.setAttribute("authUser", authUser);
 		
-
-//		Long no = authUser.getNo();
-//
-//		BoardDao dao = new BoardDao();
-//		BoardVo vo = dao.get(no);
-//
-//		request.setAttribute("BoardVo", vo);
+		
 		
 		WebUtil.forward("/WEB-INF/views/board/list.jsp", request, response);
 

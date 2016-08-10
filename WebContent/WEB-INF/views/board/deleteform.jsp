@@ -6,7 +6,6 @@
 	String result = request.getParameter("r");
 	
 %>
-
 <!doctype html>
 <html>
 <head>

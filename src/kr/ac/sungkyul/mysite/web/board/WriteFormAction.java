@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import kr.ac.sungkyul.mysite.dao.BoardDao;
+import kr.ac.sungkyul.mysite.vo.BoardVo;
 import kr.ac.sungkyul.mysite.vo.UserVo;
 import kr.ac.sungkyul.web.Action;
 import kr.ac.sungkyul.web.WebUtil;
@@ -28,6 +30,14 @@ public class WriteFormAction implements Action {
 			WebUtil.redirect("/mysite/main", request, response);
 			return;
 		}
+		
+//		String userno=request.getParameter("userno");
+//		
+//		BoardDao dao=new BoardDao();
+//		BoardVo vo=dao.get(Long.parseLong(userno));
+//		
+//		request.setAttribute("BoardVo", vo);
+
 		
 		WebUtil.forward("/WEB-INF/views/board/write.jsp", request, response);
 		

@@ -29,17 +29,19 @@ public class writeAction implements Action {
 			WebUtil.redirect("/mysite/main", request, response);
 		}
 		
-		Long no=authUser.getNo();
+		String userNo=request.getParameter("userno");
 		String title=request.getParameter("title");
 		String content=request.getParameter("content");
 		
 		BoardVo vo=new BoardVo();
-		vo.setNo(no);
+		vo.setUserNo(Long.parseLong(userNo));
 		vo.setTitle(title);
 		vo.setContent(content);
 		
 		BoardDao dao=new BoardDao();
 		dao.insert(vo);
+		
+		System.out.println(vo);
 		
 		WebUtil.redirect("/mysite/board?a=listform", request, response);
 		

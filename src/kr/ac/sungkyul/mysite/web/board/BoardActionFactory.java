@@ -28,6 +28,8 @@ public class BoardActionFactory extends ActionFactory {
 			action=new writeAction();
 		}else if("delete".equals(actionName)){
 			action=new deleteAction();
+		}else if("search".equals(actionName)){
+			action=new searchAction();
 		}
 		
 		return action;

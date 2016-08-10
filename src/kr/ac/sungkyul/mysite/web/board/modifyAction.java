@@ -25,13 +25,13 @@ public class modifyAction implements Action {
 		}
 
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
+		
 		if (authUser == null) {
 			WebUtil.redirect("/mysite/main", request, response);
 			return;
 		}
-
-
 		
+
 		String no=request.getParameter("no");
 		String title=request.getParameter("title");
 		String content=request.getParameter("content");

@@ -27,28 +27,103 @@ public class BoardDao {
 		return conn;
 	}
 	
+	public List<BoardVo> get(String keyword) {
+
+		List<BoardVo> list = new ArrayList<BoardVo>();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+
+			conn = getConnection();
+
+			String sql = "select b.no,b.title,(a.FIRST_NAME || ' ' ||a.LAST_NAME) name, b.VIEW_COUNT,b.depth,to_char(b.REG_DATE,'yyyy-mm-dd hh:mm:ss'),b.user_no from emaillist a, boards b where b.title='?'";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, keyword);
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+
+				Long no = rs.getLong(1);
+				String title = rs.getString(2);
+				String name = rs.getString(3);
+				Integer count = rs.getInt(4);
+				Integer depth = rs.getInt(5);
+				String date = rs.getString(6);
+				Long userno=rs.getLong(7);
+
+				BoardVo vo = new BoardVo();
+				vo.setNo(no);
+				vo.setTitle(title);
+				vo.setName(name);
+				vo.setCount(count);
+				vo.setDepth(depth);
+				vo.setDate(date);
+				vo.setUserNo(userno);
+
+			}
+
+		} catch (SQLException e) {
+			System.out.println("error : " + e);
+		}
+
+		return list;
+
+	}
+
+	public void updateViewCount(Long no) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = getConnection();
+
+			String sql = "update board set view_count = view_count + 1 where no = ?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setLong(1, no);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public void insert(BoardVo vo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		int count=0;
 		try {
-			
-			conn=getConnection();
+
+			conn = getConnection();
 
 			// 3. statement 생성 ?-> 값이 바인딩 된다.
-			String sql = "insert into boards VALUES(seq_boards.nextval,?,?,0,nvl((select max(group_no) from board))";
+			String sql = "insert into boards VALUES(seq_boards.nextval,?,?,1,nvl((select max(group_no) from boards), 0)+1,1,1,?,sysdate)";
 			pstmt = conn.prepareStatement(sql);
+
+			// nvl((select max(group_no) from board),0+1)
 
 			// 4. 바인딩 타이틀,컨텐 츠,번호
 			pstmt.setString(1, vo.getTitle());
 			pstmt.setString(2, vo.getContent());
-			pstmt.setLong(3, vo.getNo());
+			pstmt.setLong(3, vo.getUserNo());
 
 			// 5. 쿼리 실행
-			count= pstmt.executeUpdate(); // pstmt.executeUpdate(sql) ->sql문을 줄
-											// 필요가 없다
+			pstmt.executeUpdate(); // pstmt.executeUpdate(sql) ->sql문을 줄
+									// 필요가 없다
 		} catch (SQLException e) {
-			System.out.println("error : " + e);
+			e.printStackTrace();
 		} finally {
 			try {
 				// 6. 자원정리
@@ -63,21 +138,17 @@ public class BoardDao {
 				}
 			} catch (SQLException e) {
 				System.out.println("error : " + e);
-			
+
 			}
 
 		}
-		
+
 	}
-	
-	
 
-
-
-	public boolean delete(BoardVo vo) {
+	public void delete(BoardVo vo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		int count = 0;
+
 		try {
 			conn = getConnection();
 
@@ -88,7 +159,7 @@ public class BoardDao {
 			pstmt.setLong(1, vo.getNo());
 
 			// 5. sql 실행
-			count = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("연결 오류 : " + e);
 		} finally {
@@ -104,7 +175,47 @@ public class BoardDao {
 				System.out.println("error : " + e);
 			}
 		}
-		return (count == 1);
+
+	}
+
+	public BoardVo get2(Long no1) {
+
+		BoardVo vo = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+
+			conn = getConnection();
+
+			String sql = "select no,title,content,user_no from boards where no=?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setLong(1, no1);
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+
+				Long no = rs.getLong(1);
+				String title = rs.getString(2);
+				String content = rs.getString(3);
+				Long userno=rs.getLong(4);
+
+				vo = new BoardVo();
+				vo.setNo(no);
+				vo.setTitle(title);
+				vo.setContent(content);
+				vo.setUserNo(userno);
+
+			}
+
+		} catch (SQLException e) {
+			System.out.println("error : " + e);
+		}
+
+		return vo;
+
 	}
 
 	public BoardVo get(Long userno) {
@@ -117,7 +228,7 @@ public class BoardDao {
 
 			conn = getConnection();
 
-			String sql = "select no,title,content from boards where no=?";
+			String sql = "select no,title,content,user_no from boards where user_no=?";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setLong(1, userno);
@@ -129,11 +240,13 @@ public class BoardDao {
 				Long no = rs.getLong(1);
 				String title = rs.getString(2);
 				String content = rs.getString(3);
+				Long usernumber = rs.getLong(4);
 
 				vo = new BoardVo();
 				vo.setNo(no);
 				vo.setTitle(title);
 				vo.setContent(content);
+				vo.setUserNo(usernumber);
 
 			}
 
@@ -155,12 +268,9 @@ public class BoardDao {
 			conn = getConnection();
 
 			stmt = conn.createStatement();
-			String sql = "select b.no "
-					+ ", b.title"
-					+ ", (a.FIRST_NAME || ' ' ||a.LAST_NAME) name "
-					+ ",b.VIEW_COUNT"
+			String sql = "select b.no " + ", b.title" + ", (a.FIRST_NAME || ' ' ||a.LAST_NAME) name " + ",b.VIEW_COUNT"
 					+ ",b.depth"
-					+ ",to_char(b.REG_DATE,'yyyy-mm-dd hh:mm:ss') from emaillist a, BOARDS b where a.NO=b.USER_NO order by b.GROUP_NO desc,b.ORDER_NO";
+					+ ",to_char(b.REG_DATE,'yyyy-mm-dd hh:mm:ss'),b.user_no from emaillist a, BOARDS b where a.NO=b.USER_NO order by b.GROUP_NO desc,b.ORDER_NO";
 			rs = stmt.executeQuery(sql);
 
 			while (rs.next()) {
@@ -168,8 +278,9 @@ public class BoardDao {
 				String title = rs.getString(2);
 				String name = rs.getString(3);
 				Integer count = rs.getInt(4);
-				Integer depth=rs.getInt(5);
+				Integer depth = rs.getInt(5);
 				String date = rs.getString(6);
+				Long userno=rs.getLong(7);
 
 				BoardVo vo = new BoardVo();
 				vo.setNo(no);
@@ -178,6 +289,7 @@ public class BoardDao {
 				vo.setCount(count);
 				vo.setDepth(depth);
 				vo.setDate(date);
+				vo.setUserNo(userno);
 
 				list.add(vo);
 

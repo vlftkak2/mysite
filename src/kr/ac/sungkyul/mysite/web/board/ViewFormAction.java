@@ -31,15 +31,20 @@ public class ViewFormAction implements Action {
 			return;
 		}
 
-		// Long no=authUser.getNo();
+		 
 		String no=request.getParameter("no");
 		
 		BoardDao dao = new BoardDao();
-		BoardVo vo=dao.get(Long.parseLong(no));
+		BoardVo vo=dao.get2(Long.parseLong(no));
 		
 		request.setAttribute("BoardVo", vo);
 		
-
+		if(vo==null){
+			WebUtil.redirect("/mysite/board", request, response);
+		}
+		
+	
+		
 		WebUtil.forward("/WEB-INF/views/board/view.jsp", request, response);
 	}
 
