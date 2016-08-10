@@ -9,7 +9,8 @@
 </head>
 <body>
 	<div id="container">
-		<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+		<c:import url='/WEB-INF/views/include/header.jsp'/>
+		
 
 		<div id="content">
 			<div id="user">
@@ -19,8 +20,8 @@
 				</p>
 			</div>
 		</div>
-		<jsp:include page="/WEB-INF/views/include/navi.jsp"></jsp:include>
-		<jsp:include page="/WEB-INF/views/include/footer.jsp"></jsp:include>
+		<c:import url='/WEB-INF/views/include/navi.jsp'/>
+		<c:import url='/WEB-INF/views/include/footer.jsp'/>
 
 	</div>
 </body>

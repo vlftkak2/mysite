@@ -29,10 +29,7 @@ public class listFormAction implements Action {
 		}
 
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
-		if (authUser == null) {
-			WebUtil.redirect("/mysite/main", request, response);
-			return;
-		}
+		
 		
 		BoardDao dao=new BoardDao();
 		List<BoardVo> list=dao.getList();

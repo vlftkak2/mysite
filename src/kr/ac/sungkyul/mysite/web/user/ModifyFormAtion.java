@@ -17,28 +17,26 @@ public class ModifyFormAtion implements Action {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
-		//인증 여부 확인
-		HttpSession session=request.getSession();
-		if(session==null){
+
+		HttpSession session = request.getSession();
+		if (session == null) {
+
 			WebUtil.redirect("/mysite/main", request, response);
 			return;
 		}
-		
-		UserVo authUser=(UserVo)session.getAttribute("authUser");
-		if(authUser==null){
+
+		UserVo authUser = (UserVo) session.getAttribute("authUser");
+		if (authUser == null) {
 			WebUtil.redirect("/mysite/main", request, response);
 			return;
 		}
-		//인증이 되어있음, 사용자 번호를  가지고 UserVo를 받아온다.
-		Long no=authUser.getNo();
-		
-		UserDao dao=new UserDao();
-		UserVo vo=dao.get(no);
-		
-		request.setAttribute("userVo", vo);
-		
-		
+
+		Long no = authUser.getNo();
+		UserDao dao = new UserDao();
+
+		UserVo vo = dao.get(no);
+		request.setAttribute( "userVo", vo );
+
 		WebUtil.forward("/WEB-INF/views/user/modifyform.jsp", request, response);
 
 	}

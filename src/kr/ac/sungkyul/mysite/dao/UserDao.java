@@ -25,53 +25,6 @@ public class UserDao {
 		return conn;
 	}
 	
-	public void insert(BoardVo vo) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		int count=0;
-		try {
-			
-			conn=getConnection();
-
-			// 3. statement 생성 ?-> 값이 바인딩 된다.
-			String sql = "insert into boards VALUES(seq_boards.nextval,?,?,?,?,?,?,?,sysdate)";
-			pstmt = conn.prepareStatement(sql);
-
-			// 4. 바인딩
-			pstmt.setString(1, vo.getTitle());
-			pstmt.setString(2, vo.getContent());
-			pstmt.setInt(3, vo.getCount());
-			pstmt.setInt(4, vo.getGroupNo());
-			pstmt.setInt(5, vo.getGroupOrderNo());
-			pstmt.setInt(6,vo.getDepth());
-			pstmt.setLong(7, vo.getUserNo());
-
-			// 5. 쿼리 실행
-			count= pstmt.executeUpdate(); // pstmt.executeUpdate(sql) ->sql문을 줄
-											// 필요가 없다
-		} catch (SQLException e) {
-			System.out.println("error : " + e);
-		} finally {
-			try {
-				// 6. 자원정리
-				if (pstmt != null) {
-					pstmt.close();
-				}
-				if (conn != null) {
-					conn.close();
-				}
-				if (conn != null) {
-					conn.close();
-				}
-			} catch (SQLException e) {
-				System.out.println("error : " + e);
-			
-			}
-
-		}
-		
-	}
-	
 	public void update(UserVo vo){
 		
 		Connection conn=null;

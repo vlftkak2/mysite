@@ -2,6 +2,8 @@ package kr.ac.sungkyul.mysite.vo;
 
 public class BoardVo {
 	
+
+
 	private Long no;
 	private String title;
 	private String content;
@@ -78,7 +80,12 @@ public class BoardVo {
 	
 	
 	
-	
+	@Override
+	public String toString() {
+		return "BoardVo [no=" + no + ", title=" + title + ", content=" + content + ", count=" + count + ", groupNo="
+				+ groupNo + ", groupOrderNo=" + groupOrderNo + ", depth=" + depth + ", UserNo=" + UserNo + ", date="
+				+ date + ", name=" + name + "]";
+	}	
 	
 
 }

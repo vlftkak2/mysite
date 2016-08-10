@@ -1,13 +1,11 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.ac.sungkyul.mysite.vo.BoardVo"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
-   <%
-	List<BoardVo> list=(List<BoardVo>)request.getAttribute("list");
-	%>
 	
-
     <div id="board">
 				<form id="search_form" action="" method="post">
 					<input type="text" id="kwd" name="kwd" value=""> <input
@@ -23,16 +21,17 @@
 						<th>작성일</th>
 						<th>&nbsp;</th>
 					</tr>
-					<%for(BoardVo vo : list){ %>
+					<c:forEach var = 'vo' items='${list}' varStatus='s'>
 					<tr>
-						<td><%=vo.getNo() %></td>
-						<td><a href=""><%=vo.getTitle()%></a></td>
-						<td><%=vo.getName() %></td>
-						<td><%=vo.getCount() %></td>
-						<td><%=vo.getDate() %></td>
+						<td>${vo.no }</td>
+						<td><a href="/mysite/board?a=viewform&no=${vo.no}">${vo.title }</a></td>
+						<td>${vo.name }</td>
+						<td>${vo.count }</td>
+						<td>${vo.date }</td>
 						<td><a href="/mysite/board?a=delete" class="del">삭제</a></td>
 					</tr>
-					<%} %>
+					</c:forEach>
+					
 					<!-- 
 					<tr>
 						<td>2</td>
@@ -66,8 +65,19 @@
  					</ul> 
  				</div> 
  				<!-- end:paging --> 
-				
+ 				<c:choose>
+ 				<c:when test='${empty authUser }'>
+			
 				<div class="bottom">
+
+				</div>
+			</c:when>
+			<c:otherwise>
+				<div class="bottom">
+
 					<a href="/mysite/board?a=writeform" id="new-book">글쓰기</a>
 				</div>
+			
+			</c:otherwise>
+			</c:choose>
 			</div>

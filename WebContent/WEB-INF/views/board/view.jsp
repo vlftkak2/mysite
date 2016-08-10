@@ -1,10 +1,11 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@page import="kr.ac.sungkyul.mysite.vo.BoardVo"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%
-BoardVo vo=(BoardVo)request.getAttribute("BoardVo");
-%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,22 +23,23 @@ BoardVo vo=(BoardVo)request.getAttribute("BoardVo");
 					<tr>
 						<th colspan="2">글보기</th>
 					</tr>
+					
 					<tr>
 						<td class="label">제목</td>
-						<td><%=vo.getTitle() %></td>
+						<td>${BoardVo.title }</td>
 					</tr>
 					<tr>
 						<td class="label">내용</td>
 						<td>
-							<div class="view-content">
-								<%=vo.getContent() %>
-							</div>
+							<div class="view-content">${BoardVo.content }</div>
 						</td>
 					</tr>
-				</table>
 				
+				</table>
+
 				<div class="bottom">
-					<a href="/mysite/board?a=listform">글목록</a> <a href="/mysite/board?a=modifyform">글수정</a>
+					<a href="/mysite/board?a=listform">글목록</a> <a
+						href="/mysite/board?a=modifyform&no=${BoardVo.no }">글수정</a>
 				</div>
 			</div>
 		</div>

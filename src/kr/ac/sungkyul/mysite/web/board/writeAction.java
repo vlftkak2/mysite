@@ -39,7 +39,7 @@ public class writeAction implements Action {
 		vo.setContent(content);
 		
 		BoardDao dao=new BoardDao();
-		dao.update(vo);
+		dao.insert(vo);
 		
 		WebUtil.redirect("/mysite/board?a=listform", request, response);
 		
