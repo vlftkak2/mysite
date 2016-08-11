@@ -30,6 +30,10 @@ public class BoardActionFactory extends ActionFactory {
 			action=new deleteAction();
 		}else if("search".equals(actionName)){
 			action=new searchAction();
+		}else if("replyform".equals(actionName)){
+			action=new replyFormAction();
+		}else if("reply".equals(actionName)){
+			action=new replyAction();
 		}
 		
 		return action;

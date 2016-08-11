@@ -15,8 +15,15 @@ public class BoardVo {
 	private String date;
 	private String name;
 	private String UserName;
+	private Integer orderNo;
 	
 	
+	public Integer getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(Integer orderNo) {
+		this.orderNo = orderNo;
+	}
 	public String getUserName() {
 		return UserName;
 	}

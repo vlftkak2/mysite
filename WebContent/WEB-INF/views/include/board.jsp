@@ -24,10 +24,17 @@
 			<th>작성일</th>
 			<th>&nbsp;</th>
 		</tr>
-		<c:forEach var='vo' items='${list}' varStatus='s'>
+	
+		<c:set var="firstIndex" value="${totalCount - (currentPage - 1)*sizeList }" />
+		<c:forEach var='vo' items='${list}' varStatus='status'>
 			<tr>
-				<td>${vo.no }</td>
-				<td><a href="/mysite/board?a=viewform&no=${vo.no}">${vo.title }</a></td>
+				<td>${firstIndex - status.index }</td>	
+				<td style="text-align:left;padding-left:${(vo.depth-1)*20}px">
+	                <c:if test='${vo.depth > 1 }'>
+    		            >>>>
+            	    </c:if>
+					<a href="/mysite/board?a=viewform&no=${vo.no}">${vo.title }</a>
+				</td>
 				<td>${vo.name }</td>
 				<td>${vo.count }</td>
 				<td>${vo.date }</td>
@@ -58,7 +65,7 @@
 
 					<c:when test='${i > pageCount }'>
 						<li>${i }</li>
-					</c:when> 
+					</c:when>
 
 					<c:otherwise>
 

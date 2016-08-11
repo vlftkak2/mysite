@@ -18,8 +18,8 @@ import kr.ac.sungkyul.web.WebUtil;
 
 public class listFormAction implements Action {
 
-	private static final int LIST_PAGESIZE = 3; // 리스팅 되는 게시물 수
-	private static final int LIST_BLOCKSIZE = 3; // 페이지 리스트에 표시되는 페이지 수
+	private static final int LIST_PAGESIZE = 10; // 리스팅 되는 게시물 수
+	private static final int LIST_BLOCKSIZE = 5; // 페이지 리스트에 표시되는 페이지 수
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -67,6 +67,9 @@ public class listFormAction implements Action {
 		request.setAttribute("currentPage", page);
 		request.setAttribute("pageCount", pageCount);
 		request.setAttribute("list", list);
+		
+		request.setAttribute("totalCount", totalCount);
+	
 
 		// HttpSession session = request.getSession();
 		// if (session == null) {

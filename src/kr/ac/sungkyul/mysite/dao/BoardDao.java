@@ -72,6 +72,37 @@ public class BoardDao {
 		return list;
 
 	}
+	
+	public void updatereplyCount(int groupNo,int orderNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = getConnection();
+
+			String sql = "update boards set order_no=order_no+1 where group_no=? and order_no>=?";
+			pstmt = conn.prepareStatement(sql);
+
+
+			pstmt.setInt(1, groupNo);		
+			pstmt.setInt(2, orderNo);
+			
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	public void updateViewCount(Long no) {
 		Connection conn = null;
@@ -105,19 +136,32 @@ public class BoardDao {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-
+			
 			conn = getConnection();
 
 			// 3. statement 생성 ?-> 값이 바인딩 된다.
-			String sql = "insert into boards VALUES(seq_boards.nextval,?,?,1,nvl((select max(group_no) from boards), 0)+1,1,1,?,sysdate)";
+			String sql = (vo.getGroupNo()==null) ?
+			"insert into boards VALUES(seq_boards.nextval,?,?,1,nvl((select max(group_no) from boards), 0)+1,?,1,1,sysdate)"
+		:   "insert into boards values(seq_boards.nextval, ?, ?, 0, ?, ?, ?, ?,sysdate)";
 			pstmt = conn.prepareStatement(sql);
 
 			// nvl((select max(group_no) from board),0+1)
 
+			if(vo.getGroupNo()==null){
 			// 4. 바인딩 타이틀,컨텐 츠,번호
 			pstmt.setString(1, vo.getTitle());
 			pstmt.setString(2, vo.getContent());
 			pstmt.setLong(3, vo.getUserNo());
+			}else{
+				
+		    pstmt.setString(1, vo.getTitle());
+		    pstmt.setString(2, vo.getContent());
+		    pstmt.setInt(3, vo.getGroupNo());
+		    pstmt.setInt(4, vo.getGroupOrderNo());
+		    pstmt.setInt(5, vo.getDepth());
+		    pstmt.setLong(6, vo.getUserNo());
+				
+			}
 
 			// 5. 쿼리 실행
 			pstmt.executeUpdate(); // pstmt.executeUpdate(sql) ->sql문을 줄
@@ -188,7 +232,7 @@ public class BoardDao {
 
 			conn = getConnection();
 
-			String sql = "select no,title,content,user_no from boards where no=?";
+			String sql = "select no,title,content,user_no,depth,order_no,group_no from boards where no=?";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setLong(1, no1);
@@ -201,12 +245,18 @@ public class BoardDao {
 				String title = rs.getString(2);
 				String content = rs.getString(3);
 				Long userno = rs.getLong(4);
+				Integer depth=rs.getInt(5);
+				Integer orderno=rs.getInt(6);
+				Integer groupno=rs.getInt(7);
 
 				vo = new BoardVo();
 				vo.setNo(no);
 				vo.setTitle(title);
 				vo.setContent(content);
 				vo.setUserNo(userno);
+				vo.setDepth(depth);
+				vo.setGroupOrderNo(orderno);
+				vo.setGroupNo(groupno);
 
 			}
 
