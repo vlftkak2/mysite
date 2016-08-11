@@ -26,7 +26,7 @@ public class BoardDao {
 		}
 		return conn;
 	}
-	
+
 	public List<BoardVo> get(String keyword) {
 
 		List<BoardVo> list = new ArrayList<BoardVo>();
@@ -52,7 +52,7 @@ public class BoardDao {
 				Integer count = rs.getInt(4);
 				Integer depth = rs.getInt(5);
 				String date = rs.getString(6);
-				Long userno=rs.getLong(7);
+				Long userno = rs.getLong(7);
 
 				BoardVo vo = new BoardVo();
 				vo.setNo(no);
@@ -79,7 +79,7 @@ public class BoardDao {
 		try {
 			conn = getConnection();
 
-			String sql = "update board set view_count = view_count + 1 where no = ?";
+			String sql = "update boards set view_count = view_count + 1 where no = ?";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setLong(1, no);
@@ -200,7 +200,7 @@ public class BoardDao {
 				Long no = rs.getLong(1);
 				String title = rs.getString(2);
 				String content = rs.getString(3);
-				Long userno=rs.getLong(4);
+				Long userno = rs.getLong(4);
 
 				vo = new BoardVo();
 				vo.setNo(no);
@@ -258,63 +258,101 @@ public class BoardDao {
 
 	}
 
-	public List<BoardVo> getList() {
-
+	public List<BoardVo> getList(int page, int pagesize) {
 		List<BoardVo> list = new ArrayList<BoardVo>();
+
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
 			conn = getConnection();
+			String sql = "select * from(select c.*,rownum rn from(select a.no,a.title,(b.first_name || ' '||LAST_NAME) name,a.user_no,a.view_count,to_char(a.reg_date, 'yyyy-mm-dd pm hh:mi:ss'),a.depth from boards a, emaillist b where a.user_no=b.no order by group_no desc, order_no asc) c) where ?<=rn and rn<=?";
+			pstmt = conn.prepareStatement(sql);
 
-			stmt = conn.createStatement();
-			String sql = "select b.no " + ", b.title" + ", (a.FIRST_NAME || ' ' ||a.LAST_NAME) name " + ",b.VIEW_COUNT"
-					+ ",b.depth"
-					+ ",to_char(b.REG_DATE,'yyyy-mm-dd hh:mm:ss'),b.user_no from emaillist a, BOARDS b where a.NO=b.USER_NO order by b.GROUP_NO desc,b.ORDER_NO";
-			rs = stmt.executeQuery(sql);
+			pstmt.setInt(1, (page - 1) * pagesize + 1);
+			pstmt.setInt(2, page * pagesize);
+			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
 				Long no = rs.getLong(1);
 				String title = rs.getString(2);
-				String name = rs.getString(3);
-				Integer count = rs.getInt(4);
-				Integer depth = rs.getInt(5);
-				String date = rs.getString(6);
-				Long userno=rs.getLong(7);
+				String userName = rs.getString(3);
+				Long userNo = rs.getLong(4);
+				Integer viewCount = rs.getInt(5);
+				String regDate = rs.getString(6);
+				Integer depth = rs.getInt(7);
 
 				BoardVo vo = new BoardVo();
 				vo.setNo(no);
 				vo.setTitle(title);
-				vo.setName(name);
-				vo.setCount(count);
+				vo.setUserName(userName);
+				vo.setUserNo(userNo);
+				vo.setCount(viewCount);
+				vo.setDate(regDate);
 				vo.setDepth(depth);
-				vo.setDate(date);
-				vo.setUserNo(userno);
 
 				list.add(vo);
-
 			}
-		} catch (SQLException e) {
-			System.out.println("error : " + e);
+
+			return list;
+		} catch (SQLException ex) {
+			System.out.println("error: " + ex);
+			return list;
 		} finally {
 			try {
-
 				if (rs != null) {
 					rs.close();
 				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
 
-				if (stmt != null) {
-					stmt.close();
+	public int getTotalCount() {
+
+		int totalCount = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = getConnection();
+
+			String sql = "select count(*) from boards";
+			pstmt = conn.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				totalCount = rs.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
 				}
 				if (conn != null) {
 					conn.close();
 				}
 			} catch (SQLException e) {
-				System.out.println("error : " + e);
+				e.printStackTrace();
 			}
 		}
 
-		return list;
+		return totalCount;
 
 	}
 

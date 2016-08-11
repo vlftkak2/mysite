@@ -31,59 +31,48 @@
 				<td>${vo.name }</td>
 				<td>${vo.count }</td>
 				<td>${vo.date }</td>
-				<td>
-				<c:choose>
-					<c:when test='${not empty authUser && authUser.no == vo.userNo }'>
+				<td><c:choose>
+						<c:when test='${not empty authUser && authUser.no == vo.userNo }'>
 
-					<a href="/mysite/board?a=delete&no=${vo.no}" class="del">삭제</a>
-					</c:when>
-					<c:otherwise>
+							<a href="/mysite/board?a=delete&no=${vo.no}" class="del">삭제</a>
+						</c:when>
+						<c:otherwise>
 					&nbsp;
 					</c:otherwise>
-				</c:choose>
-				</td>
+					</c:choose></td>
 			</tr>
 		</c:forEach>
-
-
-		<!-- 
-					<tr>
-						<td>2</td>
-						<td><a href="">두 번째 글입니다.</a></td>
-						<td>안대혁</td>
-						<td>3</td>
-						<td>2015-10-02 12:04:12</td>
-						<td><a href="" class="del">삭제</a></td>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td><a href=""></a></td>
-						<td>안대혁</td>
-						<td>3</td>
-						<td></td>
-						<td><a href="" class="del">삭제</a></td>
-					</tr>
-					 -->
 	</table>
 
 	<!-- begin:paging -->
 	<div class="pager">
 		<ul>
-			<li><a href="">◀</a></li>
-			<c:forEach begin='${beginPage }' end='${endPage }' step='1' var='i' >
-			
-			<c:choose>
-			<c:when test='${currentPage==i }'>
-		    <li class="selected">${i }</li>
-			<c:otherwise>
-		    <li><a href="/mysite/board?a=list&p=${i }">${i }</a></li>
-			</c:otherwise>
-			</c:when>
-			</c:choose>
+			<c:if test="${prevPage > 0 }">
+				<li><a href="/mysite/board?a=listform&p=${prevPage }">◀</a></li>
+			</c:if>
+			<c:forEach begin='${firstPage }' end='${lastPage }' step='1' var='i'>
+				<c:choose>
+					<c:when test='${currentPage == i }'>
+						<li class="selected">${i }</li>
+					</c:when>
+
+					<c:when test='${i > pageCount }'>
+						<li>${i }</li>
+					</c:when> 
+
+					<c:otherwise>
+
+						<li><a href="/mysite/board?a=listform&p=${i }">${i }</a></li>
+					</c:otherwise>
+				</c:choose>
 			</c:forEach>
-			<li><a href="">▶</a></li>
+
+			<c:if test='${nextPage > 0 }'>
+				<li><a href="/mysite/board?a=listform&p=${nextPage }">▶</a></li>
+			</c:if>
 		</ul>
 	</div>
+
 	<!-- end:paging -->
 	<c:choose>
 		<c:when test='${empty authUser }'>

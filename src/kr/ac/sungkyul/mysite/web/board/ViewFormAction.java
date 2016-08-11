@@ -43,7 +43,7 @@ public class ViewFormAction implements Action {
 			WebUtil.redirect("/mysite/board", request, response);
 		}
 		
-	
+		dao.updateViewCount(Long.parseLong(no));
 		
 		WebUtil.forward("/WEB-INF/views/board/view.jsp", request, response);
 	}

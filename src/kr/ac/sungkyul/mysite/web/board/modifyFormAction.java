@@ -18,7 +18,6 @@ public class modifyFormAction implements Action {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		
 		HttpSession session = request.getSession();
 		if (session == null) {
 
@@ -31,15 +30,19 @@ public class modifyFormAction implements Action {
 			WebUtil.redirect("/mysite/main", request, response);
 			return;
 		}
-		
-		String no=request.getParameter("no");
-		
-		BoardDao dao=new BoardDao();
+
+		String no = request.getParameter("no");
+
+		if (no == null || no.matches("-?\\d+(\\.\\d+)?") == false) {
+			WebUtil.redirect("/mysite/board", request, response);
+			return;
+		}
+
+		BoardDao dao = new BoardDao();
 		BoardVo vo = dao.get2(Long.parseLong(no));
-		
+
 		request.setAttribute("BoardVo", vo);
 
-				
 		WebUtil.forward("/WEB-INF/views/board/modify.jsp", request, response);
 
 	}
