@@ -23,18 +23,21 @@ public class listFormAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+System.out.println("dd");
 		// 1. 페이지 파라미터 가져오기
 		int page = 1;
 		String sPage = request.getParameter("p");
 		if (sPage != null && sPage.matches("-?\\d+(\\.\\d+)?") == true) { //숫자가 아니면
 			page = Integer.parseInt(sPage);
 		}
+		
+		String keyword=request.getParameter("kwd");
 
 		// 2. Dao 생성
 		BoardDao dao = new BoardDao();
 
 		// 3. 페이징을 위한 기본 데이터 세팅
+		//keyword=
 		int totalCount = dao.getTotalCount();
 		int pageCount = (int) Math.ceil((double) totalCount / LIST_PAGESIZE);
 		
@@ -57,7 +60,7 @@ public class listFormAction implements Action {
 		int nextPage = (currentBlock < blockCount) ? currentBlock * LIST_BLOCKSIZE + 1 : 0;
 
 		// 4. 리스트 가져오기
-		List<BoardVo> list = dao.getList(page, LIST_PAGESIZE);
+		List<BoardVo> list = dao.getList(page, LIST_PAGESIZE, keyword);
 
 		request.setAttribute("sizeList", LIST_PAGESIZE);
 		request.setAttribute("firstPage", startPage);
@@ -67,17 +70,8 @@ public class listFormAction implements Action {
 		request.setAttribute("currentPage", page);
 		request.setAttribute("pageCount", pageCount);
 		request.setAttribute("list", list);
-		
 		request.setAttribute("totalCount", totalCount);
-	
-
-		// HttpSession session = request.getSession();
-		// if (session == null) {
-		//
-		// WebUtil.redirect("/mysite/main", request, response);
-		// return;
-		// }
-		// UserVo authUser = (UserVo) session.getAttribute("authUser");
+		request.setAttribute("keyword", keyword);
 
 		WebUtil.forward("/WEB-INF/views/board/list.jsp", request, response);
 

@@ -308,7 +308,7 @@ public class BoardDao {
 
 	}
 
-	public List<BoardVo> getList(int page, int pagesize) {
+	public List<BoardVo> getList(int page, int pagesize,String keyword) {
 		List<BoardVo> list = new ArrayList<BoardVo>();
 
 		Connection conn = null;
@@ -316,11 +316,27 @@ public class BoardDao {
 		ResultSet rs = null;
 		try {
 			conn = getConnection();
-			String sql = "select * from(select c.*,rownum rn from(select a.no,a.title,(b.first_name || ' '||LAST_NAME) name,a.user_no,a.view_count,to_char(a.reg_date, 'yyyy-mm-dd pm hh:mi:ss'),a.depth from boards a, emaillist b where a.user_no=b.no order by group_no desc, order_no asc) c) where ?<=rn and rn<=?";
+			String sql =(keyword ==null || "".equals(keyword))? 
+		    "select * from(select c.*,rownum rn from(select a.no,a.title,(b.first_name || ' '||LAST_NAME) name,a.user_no,a.view_count,to_char(a.reg_date, 'yyyy-mm-dd pm hh:mi:ss'),a.depth from boards a, emaillist b where a.user_no=b.no order by group_no desc, order_no asc) c) where ?<=rn and rn<=?"
+			:"select * from(select c.*,rownum rn from(select a.no,a.title,(b.first_name || ' '||LAST_NAME) name,a.user_no,a.view_count,to_char(a.reg_date, 'yyyy-mm-dd pm hh:mi:ss'),a.depth from boards a, emaillist b where a.user_no=b.no and (title like ? or content like ?) order by group_no desc, order_no asc) c) where ?<=rn and rn<=?";
+
+				
 			pstmt = conn.prepareStatement(sql);
+			
+			if(keyword ==null || "".equals(keyword)){
 
 			pstmt.setInt(1, (page - 1) * pagesize + 1);
 			pstmt.setInt(2, page * pagesize);
+			
+			}else{
+				
+				
+			pstmt.setString(1, "%"+keyword+"%");
+			pstmt.setString(2, "%"+keyword+"%");
+			pstmt.setInt(3, (page - 1) * pagesize + 1);
+			pstmt.setInt(4, page * pagesize);
+			}
+			
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -343,11 +359,13 @@ public class BoardDao {
 
 				list.add(vo);
 			}
-
 			return list;
+			
 		} catch (SQLException ex) {
+			
 			System.out.println("error: " + ex);
 			return list;
+			
 		} finally {
 			try {
 				if (rs != null) {
@@ -363,6 +381,7 @@ public class BoardDao {
 				ex.printStackTrace();
 			}
 		}
+		
 	}
 
 	public int getTotalCount() {

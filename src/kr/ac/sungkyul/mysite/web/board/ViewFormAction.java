@@ -25,13 +25,6 @@ public class ViewFormAction implements Action {
 			return;
 		}
 
-		UserVo authUser = (UserVo) session.getAttribute("authUser");
-		if (authUser == null) {
-			WebUtil.redirect("/mysite/main", request, response);
-			return;
-		}
-
-		 
 		String no=request.getParameter("no");
 		
 		BoardDao dao = new BoardDao();

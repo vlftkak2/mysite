@@ -47,8 +47,15 @@
 					<a href="/mysite/board?a=listform">글목록</a>
 					<a href="/mysite/board?a=replyform&no=${BoardVo.no }">답글 달기</a>
 					</c:when>
+				    
+					<c:when test='${empty authUser }'>
+					&nbsp;					
+					</c:when>
+					
 					<c:otherwise>
 					<a href="/mysite/board?a=listform">글목록</a>
+					<a href="/mysite/board?a=replyform&no=${BoardVo.no }">답글 달기</a>
+					
 					</c:otherwise>
 				</c:choose>
 				</td>

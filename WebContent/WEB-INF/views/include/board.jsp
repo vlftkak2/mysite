@@ -8,8 +8,8 @@
 
 
 <div id="board">
-	<form id="search_form" action="/mysite/board?a=search" method="post">
-		<input type="text" id="kwd" name="kwd" value=""> <input
+	<form id="search_form" action="/mysite/board?a=listform" method="get">
+		<input type="text" id="kwd" name="kwd" value="${keyword }"> <input
 			type="submit" value="찾기">
 	</form>
 
@@ -31,7 +31,7 @@
 				<td>${firstIndex - status.index }</td>	
 				<td style="text-align:left;padding-left:${(vo.depth-1)*20}px">
 	                <c:if test='${vo.depth > 1 }'>
-    		            >>>>
+    		          >>>
             	    </c:if>
 					<a href="/mysite/board?a=viewform&no=${vo.no}">${vo.title }</a>
 				</td>
@@ -84,8 +84,8 @@
 	<c:choose>
 		<c:when test='${empty authUser }'>
 
-			<div class="bottom"></div>
-		</c:when>
+	&nbsp;		
+	</c:when>
 		<c:otherwise>
 			<div class="bottom">
 

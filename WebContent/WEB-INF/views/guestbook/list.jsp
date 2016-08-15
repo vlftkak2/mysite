@@ -39,7 +39,7 @@
             </form>
                
             <ul>
-            <c:set var = "countList" value= '${fn:length(list) }'/>
+            <c:set var='countList' value='${fn:length(mylist) }'/>
             <c:forEach var = 'vo' items='${mylist}' varStatus='s'>
                <li>
                   <table>

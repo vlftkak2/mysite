@@ -16,8 +16,15 @@ public class BoardVo {
 	private String name;
 	private String UserName;
 	private Integer orderNo;
+	private String keyword;
 	
 	
+	public String getKeyword() {
+		return keyword;
+	}
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
 	public Integer getOrderNo() {
 		return orderNo;
 	}

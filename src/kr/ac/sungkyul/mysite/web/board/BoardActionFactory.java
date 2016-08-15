@@ -12,16 +12,10 @@ public class BoardActionFactory extends ActionFactory {
 		
 		if("viewform".equals(actionName)){
 			action=new ViewFormAction();
-			return action;
 		}else if("writeform".equals(actionName)){
 			action=new WriteFormAction();
-			return action;
-		}else if("listform".equals(actionName)){
-			action=new listFormAction();
-			return action;
 		}else if("modifyform".equals(actionName)){
 			action=new modifyFormAction();
-			return action;	
 		}else if("modify".equals(actionName)){
 			action=new modifyAction();
 		}else if("write".equals(actionName)){
@@ -34,8 +28,11 @@ public class BoardActionFactory extends ActionFactory {
 			action=new replyFormAction();
 		}else if("reply".equals(actionName)){
 			action=new replyAction();
-		}
-		
+		}else if("search".equals(actionName)){
+			action=new searchAction();
+		}else{
+			action=new listFormAction();
+		}	
 		return action;
 	}
 
